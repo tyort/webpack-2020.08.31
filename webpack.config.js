@@ -13,6 +13,15 @@ module.exports = {
     filename: `[name].[contenthash].js`,
     path: path.resolve(__dirname, `dist`)
   },
+  resolve: {
+    // понимает расширения файлов, даже если их не прописать
+    extensions: ['.js'],
+    // оптимизирует запись путей к файлам
+    alias: {
+      '@models': path.resolve(__dirname, 'src/models'),
+      '@': path.resolve(__dirname, 'src'),
+    }
+  },
   plugins: [
     new HTMLWebpackPlugin({
       template: './index.html'
@@ -24,6 +33,22 @@ module.exports = {
       {
         test: /\.css$/,
         use: [`style-loader`, `css-loader`]
+      },
+      {
+        test: /\.(png|jpg|svg|gif)$/,
+        use: ['file-loader']
+      },
+      {
+        test: /\.(ttf|woff|woff2|eot)$/,
+        use: ['file-loader']
+      },
+      {
+        test: /\.xml$/,
+        use: ['xml-loader']
+      },
+      {
+        test: /\.csv$/,
+        use: ['csv-loader']
       }
     ]
   }
