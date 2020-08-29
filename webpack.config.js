@@ -3,9 +3,28 @@ const HTMLWebpackPlugin = require(`html-webpack-plugin`)
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCssAssetWebpackPlugin = require('optimize-css-assets-webpack-plugin')
+const TerserWebpackPlugin = require('terser-webpack-plugin')
 
 const isDev = process.env.NODE_ENV === 'development' // получаем boolean
 const isProd = !isDev
+
+const optimization = () => {
+  const config = {
+    splitChunks: {
+      chunks: 'all'
+    }
+  }
+
+  if (isProd) {
+    config.minimizer = [ // минимизируем css в режиме production
+      new OptimizeCssAssetWebpackPlugin(),
+      new TerserWebpackPlugin()
+    ]
+  }
+
+  return config
+}
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
@@ -27,11 +46,7 @@ module.exports = {
       '@': path.resolve(__dirname, 'src'),
     }
   },
-  optimization: { // в dist создаются файлы vendor помогает не загружать два раза, например, библиотеку jquery, если она подключена в двух файлах
-    splitChunks: {
-      chunks: `all`
-    }
-  },
+  optimization: optimization(), // в dist создаются файлы vendor помогает не загружать два раза, например, библиотеку jquery, если она подключена в двух файлах
   devServer: {
     port: 4200,
     hot: isDev // позволяет обновлять отдельные модули страницы, без её полной перезагрузки только в случае isDev === true
