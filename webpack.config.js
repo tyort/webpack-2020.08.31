@@ -4,6 +4,9 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
+const isDev = process.env.NODE_ENV === 'development' // получаем boolean
+const isProd = !isDev
+
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   mode: `development`,
@@ -30,11 +33,15 @@ module.exports = {
     }
   },
   devServer: {
-    port: 4200
+    port: 4200,
+    hot: isDev // позволяет обновлять отдельные модули страницы, без её полной перезагрузки только в случае isDev === true
   },
   plugins: [
     new HTMLWebpackPlugin({
-      template: './index.html'
+      template: './index.html',
+      minify: {
+        collapseWhitespace: isProd
+      }
     }),
     new CleanWebpackPlugin(),
     new CopyWebpackPlugin({ // копирование статических файлов
@@ -49,14 +56,17 @@ module.exports = {
       filename: `[name].[contenthash].css`
     })
   ],
-  module: {
+  module: { // добавляем лоадеры, чтобы webpack работал с другими файлами, как с модулями js
     rules: [
       {
         test: /\.css$/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
-            options: {},
+            options: {
+              hmr: isDev, // изменяем сущности без перезагрузки страницы только в случае isDev === true
+              reloadAll: true
+            },
           },
           `css-loader`
         ]
