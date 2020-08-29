@@ -12,7 +12,8 @@ import './styles/styles.css'
 
 const post = new Post('Webpack Post Title', WebpackLogo)
 
-$(`pre`).addClass(`code`).html(post.toString())
+// с помощью jquery забрать тег pre и вставить. Также добавляем class="code"
+$('pre').addClass('code').html(post.toString())
 
 // console.log('JSON:', json)
 // console.log('XML:', xml)

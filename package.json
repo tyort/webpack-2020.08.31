@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
-    "watch": "webpack --mode development --watch"
+    "watch": "webpack --mode development --watch",
+    "start": "webpack-dev-server --mode development --open"
   },
   "keywords": [
     "js",
@@ -17,6 +18,7 @@
   "license": "ISC",
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^6.0.4",
     "css-loader": "^4.2.2",
     "csv-loader": "^3.0.3",
     "file-loader": "^6.0.0",
@@ -25,6 +27,7 @@
     "style-loader": "^1.2.1",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0",
     "xml-loader": "^1.2.1"
   },
   "dependencies": {
