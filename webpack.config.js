@@ -47,12 +47,29 @@ const cssLoaders = extra => {
   return loaders
 }
 
+const babelOptions = preset => {
+  const opts = {
+    presets: [
+      '@babel/preset-env' // просто расширяет возможности babel
+    ],
+    plugins: [
+      '@babel/plugin-proposal-class-properties' // расширяет возможности babel даже используя proposal синтаксис
+    ]
+  }
+
+  if (preset) {
+    opts.presets.push(preset)
+  }
+
+  return opts
+}
+
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   mode: `development`,
   entry: {
-    main: `./index.js`,
-    analytics: './analytics.js'
+    main: ['@babel/polyfill', './index.js'],
+    analytics: './analytics.ts'
   },
   output: {
     filename: filename('js'),
@@ -121,6 +138,22 @@ module.exports = {
       {
         test: /\.csv$/,
         use: ['csv-loader']
+      },
+      {
+        test: /\.ts$/, // работаем с typescript
+        exclude: /node_modules/,
+        loader: {
+          loader: 'babel-loader',
+          options: babelOptions('@babel/preset-typescript')
+        }
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: {
+          loader: 'babel-loader',
+          options: babelOptions()
+        }
       }
     ]
   }

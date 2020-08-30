@@ -7,6 +7,7 @@ import Post from '@models/Post'
 // может быть отрыт программой Microsoft Excel
 // import csv from './assets/data.csv'
 import WebpackLogo from '@/assets/webpack-logo.png'
+import './babel' // помогает новый синтаксис js оптимизировать под старый js, который понимают все браузеры
 import './styles/styles.css'
 import './styles/less.less'
 import './styles/scss.scss'

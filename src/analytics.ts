@@ -1,10 +1,10 @@
 import * as $ from 'jquery'
 
-function createAnalytics() {
+function createAnalytics(): object { // функция в typescript возвращает object
   let counter = 0
-  let destroyed = false
+  let destroyed: boolean = false
 
-  const listener = () => counter++
+  const listener = (): number => counter++ // функция в typescript возвращает number
 
   // то же, что и document.addEventListener('click', listener) только с jquery
   $(document).on('click', listener)
@@ -25,4 +25,4 @@ function createAnalytics() {
   }
 }
 
-window.analytics = createAnalytics()
+window[`analytics`] = createAnalytics()
