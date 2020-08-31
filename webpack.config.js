@@ -64,6 +64,19 @@ const babelOptions = preset => {
   return opts
 }
 
+const jsLoaders = () => {
+  const loaders = [{
+    loader: 'babel-loader',
+    options: babelOptions()
+  }]
+
+  if (isDev) {
+    loaders.push('eslint-loader')
+  }
+
+  return loaders
+}
+
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   mode: `development`,
@@ -89,6 +102,7 @@ module.exports = {
     port: 4200,
     hot: isDev // позволяет обновлять отдельные модули страницы, без её полной перезагрузки только в случае isDev === true
   },
+  devtool: isDev ? 'source-map' : '',
   plugins: [
     new HTMLWebpackPlugin({
       template: './index.html',
@@ -138,6 +152,11 @@ module.exports = {
       {
         test: /\.csv$/,
         use: ['csv-loader']
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: jsLoaders()
       },
       {
         test: /\.ts$/, // работаем с typescript
