@@ -5,6 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCssAssetWebpackPlugin = require('optimize-css-assets-webpack-plugin')
 const TerserWebpackPlugin = require('terser-webpack-plugin')
+const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer')
 
 const isDev = process.env.NODE_ENV === 'development' // получаем boolean
 const isProd = !isDev
@@ -77,6 +78,33 @@ const jsLoaders = () => {
   return loaders
 }
 
+const plugins = () => {
+  const base = [
+    new HTMLWebpackPlugin({
+      template: './index.html',
+      minify: {
+        collapseWhitespace: isProd
+      }
+    }),
+    new CleanWebpackPlugin(),
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, 'src/favicon.ico'),
+        to: path.resolve(__dirname, 'dist')
+      }
+    ]),
+    new MiniCssExtractPlugin({
+      filename: filename('css')
+    })
+  ]
+
+  if (isProd) {
+    base.push(new BundleAnalyzerPlugin())
+  }
+
+  return base
+}
+
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   mode: `development`,
@@ -103,26 +131,7 @@ module.exports = {
     hot: isDev // позволяет обновлять отдельные модули страницы, без её полной перезагрузки только в случае isDev === true
   },
   devtool: isDev ? 'source-map' : '',
-  plugins: [
-    new HTMLWebpackPlugin({
-      template: './index.html',
-      minify: {
-        collapseWhitespace: isProd
-      }
-    }),
-    new CleanWebpackPlugin(),
-    new CopyWebpackPlugin({ // копирование статических файлов
-      patterns: [
-          {
-              from: path.resolve(__dirname, 'src/favicon.ico'),
-              to: path.resolve(__dirname, 'dist')
-          }
-      ]
-    }),
-    new MiniCssExtractPlugin({ // складывает стили css в отдельный файл
-      filename: filename('css')
-    })
-  ],
+  plugins: plugins(),
   module: { // добавляем лоадеры, чтобы webpack работал с другими файлами, как с модулями js
     rules: [
       {
