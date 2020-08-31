@@ -7,6 +7,8 @@ import Post from '@models/Post'
 // может быть отрыт программой Microsoft Excel
 // import csv from './assets/data.csv'
 import WebpackLogo from '@/assets/webpack-logo.png'
+import React from 'react'
+import {render} from 'react-dom'
 import './babel' // помогает новый синтаксис js оптимизировать под старый js, который понимают все браузеры
 import './styles/styles.css'
 import './styles/less.less'
@@ -16,6 +18,26 @@ const post = new Post('Webpack Post Title', WebpackLogo)
 
 // с помощью jquery забрать тег pre и вставить. Также добавляем class="code"
 $('pre').addClass('code').html(post.toString())
+
+const App = () => (
+  <div className="container">
+    <h1>Webpack Course</h1>
+    <hr />
+    <div className="logo" />
+    <hr />
+    <pre />
+    <hr />
+    <div className="box">
+      <h2>Less</h2>
+    </div>
+
+    <div className="card">
+      <h2>SCSS</h2>
+    </div>
+  </div>
+)
+
+render(<App/>, document.getElementById('app'))
 
 // console.log('JSON:', json)
 // console.log('XML:', xml)
